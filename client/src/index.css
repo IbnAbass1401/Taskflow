@@ -1,14 +1,59 @@
 @import "tailwindcss";
 
+@custom-variant hover (&:hover);
+
 @theme {
   --color-mist: #F5FAFF;
   --color-frost: #D6E8FA;
   --color-sky: #7FB3EA;
   --color-royal: #2563EB;
   --color-navy: #0F1E3D;
+  --color-danger: #DC2626;
+
+  --font-display: "Bricolage Grotesque", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: "Figtree", ui-sans-serif, system-ui, sans-serif;
+
+  --shadow-lift: 0 8px 24px -8px rgb(15 30 61 / 0.18);
+  --shadow-panel: -12px 0 40px -12px rgb(15 30 61 / 0.25);
+
+  --animate-pop: pop 260ms cubic-bezier(0.34, 1.56, 0.64, 1);
+  --animate-rise: rise 400ms ease-out both;
+  --animate-slide-in: slide-in 250ms ease-out;
+
+  @keyframes pop {
+    from { opacity: 0; transform: scale(0.94); }
+    to   { opacity: 1; transform: scale(1); }
+  }
+  @keyframes rise {
+    from { opacity: 0; transform: translateY(8px); }
+    to   { opacity: 1; transform: none; }
+  }
+  @keyframes slide-in {
+    from { transform: translateX(100%); }
+    to   { transform: translateX(0); }
+  }
 }
 
-body {
-  background-color: var(--color-mist);
-  color: var(--color-navy);
+@layer base {
+  body {
+    background-color: var(--color-mist);
+    color: var(--color-navy);
+    font-family: var(--font-sans);
+  }
+  h1, h2, h3 {
+    font-family: var(--font-display);
+    letter-spacing: -0.01em;
+  }
+  :focus-visible {
+    outline: 2px solid var(--color-royal);
+    outline-offset: 2px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }
