@@ -1,44 +1,146 @@
-### 1. Create a task
-POST http://localhost:5000/api/tasks
+@baseUrl = http://localhost:5000/api
+
+###########################
+# AUTH
+###########################
+
+### Register user 1 (400 "Email already registered" is fine if it exists)
+POST {{baseUrl}}/auth/register
 Content-Type: application/json
 
 {
+  "name": "Ibn Abass",
+  "email": "test@example.com",
+  "password": "123456"
+}
+
+### Register same email again (should be 400)
+POST {{baseUrl}}/auth/register
+Content-Type: application/json
+
+{
+  "name": "Ibn Abass",
+  "email": "test@example.com",
+  "password": "123456"
+}
+
+### Login user 1 (send this first, the others use its token)
+# @name login
+POST {{baseUrl}}/auth/login
+Content-Type: application/json
+
+{
+  "email": "test@example.com",
+  "password": "123456"
+}
+
+### Login with wrong password (should be 401)
+POST {{baseUrl}}/auth/login
+Content-Type: application/json
+
+{
+  "email": "test@example.com",
+  "password": "wrongpass"
+}
+
+###########################
+# TASKS (need a token)
+###########################
+
+### Tasks without a token (should be 401)
+GET {{baseUrl}}/tasks
+
+### Create a task
+# @name createTask
+POST {{baseUrl}}/tasks
+Content-Type: application/json
+Authorization: Bearer {{login.response.body.token}}
+
+{
   "title": "Learn Express",
+  "description": "Finish the backend",
   "priority": "high"
 }
 
-### 2. Create without title (should fail)
-POST http://localhost:5000/api/tasks
+### Create without a title (should be 400)
+POST {{baseUrl}}/tasks
 Content-Type: application/json
+Authorization: Bearer {{login.response.body.token}}
 
 {
   "description": "no title"
 }
 
-### 3. Get all tasks
-GET http://localhost:5000/api/tasks
+### Get all my tasks
+GET {{baseUrl}}/tasks
+Authorization: Bearer {{login.response.body.token}}
 
-### 4. Filter by status
-GET http://localhost:5000/api/tasks?status=pending
+### Filter by status
+GET {{baseUrl}}/tasks?status=pending
+Authorization: Bearer {{login.response.body.token}}
 
-### 5. Get one task
-GET http://localhost:5000/api/tasks/6ae1054d7370d85bf749f38c
+### Get one task
+GET {{baseUrl}}/tasks/{{createTask.response.body._id}}
+Authorization: Bearer {{login.response.body.token}}
 
-### 6. Update a task
-PUT http://localhost:5000/api/tasks/6ae1054d7370d85bf749f38c
+### Update a task
+PUT {{baseUrl}}/tasks/{{createTask.response.body._id}}
 Content-Type: application/json
+Authorization: Bearer {{login.response.body.token}}
 
 {
-  "status": "completed"
+  "status": "in-progress"
 }
 
-### 7. Invalid status (should fail)
-PUT http://localhost:5000/api/tasks/6ae1054d7370d85bf749f38c
+### Invalid status (should be 400)
+PUT {{baseUrl}}/tasks/{{createTask.response.body._id}}
 Content-Type: application/json
+Authorization: Bearer {{login.response.body.token}}
 
 {
   "status": "banana"
 }
 
-### 8. Delete a task
-DELETE http://localhost:5000/api/tasks/6ae1054d7370d85bf749f38c
+###########################
+# OWNERSHIP (second user)
+###########################
+
+### Register user 2
+POST {{baseUrl}}/auth/register
+Content-Type: application/json
+
+{
+  "name": "Other User",
+  "email": "other@example.com",
+  "password": "123456"
+}
+
+### Login user 2
+# @name login2
+POST {{baseUrl}}/auth/login
+Content-Type: application/json
+
+{
+  "email": "other@example.com",
+  "password": "123456"
+}
+
+### User 2 sees no tasks (should be [])
+GET {{baseUrl}}/tasks
+Authorization: Bearer {{login2.response.body.token}}
+
+### User 2 opens user 1's task (should be 404)
+GET {{baseUrl}}/tasks/{{createTask.response.body._id}}
+Authorization: Bearer {{login2.response.body.token}}
+
+### User 2 tries to delete user 1's task (should be 404)
+DELETE {{baseUrl}}/tasks/{{createTask.response.body._id}}
+Authorization: Bearer {{login2.response.body.token}}
+
+###########################
+# CLEANUP
+###########################
+
+### Delete my task
+DELETE {{baseUrl}}/tasks/{{createTask.response.body._id}}
+Authorization: Bearer {{login.response.body.token}}
