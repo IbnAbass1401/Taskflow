@@ -1,0 +1,44 @@
+### 1. Create a task
+POST http://localhost:5000/api/tasks
+Content-Type: application/json
+
+{
+  "title": "Learn Express",
+  "priority": "high"
+}
+
+### 2. Create without title (should fail)
+POST http://localhost:5000/api/tasks
+Content-Type: application/json
+
+{
+  "description": "no title"
+}
+
+### 3. Get all tasks
+GET http://localhost:5000/api/tasks
+
+### 4. Filter by status
+GET http://localhost:5000/api/tasks?status=pending
+
+### 5. Get one task (replace PASTE_ID)
+GET http://localhost:5000/api/tasks/6ae1054d7370d85bf749f38c
+
+### 6. Update a task
+PUT http://localhost:5000/api/tasks/6ae1054d7370d85bf749f38c
+Content-Type: application/json
+
+{
+  "status": "completed"
+}
+
+### 7. Invalid status (should fail)
+PUT http://localhost:5000/api/tasks/6ae1054d7370d85bf749f38c
+Content-Type: application/json
+
+{
+  "status": "banana"
+}
+
+### 8. Delete a task
+DELETE http://localhost:5000/api/tasks/6ae1054d7370d85bf749f38c
