@@ -21,7 +21,7 @@ GET http://localhost:5000/api/tasks
 ### 4. Filter by status
 GET http://localhost:5000/api/tasks?status=pending
 
-### 5. Get one task (replace PASTE_ID)
+### 5. Get one task
 GET http://localhost:5000/api/tasks/6ae1054d7370d85bf749f38c
 
 ### 6. Update a task
