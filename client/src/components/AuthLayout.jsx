@@ -38,7 +38,7 @@ export default function AuthLayout({ title, subtitle, children, footer }) {
       </header>
 
       {/* form card: fills the rest of the phone screen */}
-      <main className="flex flex-1 p-4 pb-6 lg:items-center lg:justify-center lg:p-6">
+      <main className="flex flex-1 p-10 pb-20 lg:items-center lg:justify-center lg:p-6">
         <div className="flex w-full animate-rise flex-col justify-center rounded-3xl border border-frost bg-white p-6 shadow-lift lg:max-w-sm lg:rounded-none lg:border-0 lg:bg-transparent lg:p-0 lg:shadow-none">
           <h1 className="font-display text-4xl font-semibold lg:text-3xl">{title}</h1>
           <p className="mt-2 text-lg text-navy/70 lg:mt-1.5 lg:text-base">{subtitle}</p>
