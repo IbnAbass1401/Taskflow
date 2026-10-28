@@ -29,20 +29,21 @@ export default function AuthLayout({ title, subtitle, children, footer }) {
       </aside>
 
       {/* phone: compact header */}
-      <header className="bg-navy px-6 pb-14 pt-10 text-mist lg:hidden">
-        <span className="font-display text-3xl font-semibold">TaskFlow</span>
+      <header className="bg-navy px-6 pb-10 pt-10 text-mist lg:hidden">
+        <span className="font-display text-4xl font-semibold">TaskFlow</span>
         <MiniBoard heights={["h-10", "h-7", "h-14"]} className="mt-6 max-w-56" />
-        <p className="mt-5 font-display text-2xl font-semibold leading-snug">
-          See what is pending, what is moving, and what is done.
+        <p className="mt-5 font-display text-xl font-semibold leading-snug text-mist/90">
+        See what is pending, what is moving, and what is done.
         </p>
       </header>
 
-      <main className="relative -mt-6 flex flex-1 px-4 pb-4 lg:mt-0 lg:items-center lg:justify-center lg:p-6">
+      {/* form card: fills the rest of the phone screen */}
+      <main className="flex flex-1 p-4 pb-6 lg:items-center lg:justify-center lg:p-6">
         <div className="flex w-full animate-rise flex-col justify-center rounded-3xl border border-frost bg-white p-6 shadow-lift lg:max-w-sm lg:rounded-none lg:border-0 lg:bg-transparent lg:p-0 lg:shadow-none">
-          <h1 className="font-display text-3xl font-semibold">{title}</h1>
-          <p className="mt-1.5 text-navy/70">{subtitle}</p>
+          <h1 className="font-display text-4xl font-semibold lg:text-3xl">{title}</h1>
+          <p className="mt-2 text-lg text-navy/70 lg:mt-1.5 lg:text-base">{subtitle}</p>
           <div className="mt-8">{children}</div>
-          <p className="mt-6 text-sm text-navy/70">{footer}</p>
+          <p className="mt-8 text-base text-navy/70 lg:mt-6 lg:text-sm">{footer}</p>
         </div>
       </main>
     </div>
