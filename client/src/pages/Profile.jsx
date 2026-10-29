@@ -1,16 +1,24 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+import Navbar from "../components/Navbar";
+import Field from "../components/Field";
 
-const inputClass =
-  "w-full rounded-xl border border-frost bg-mist px-4 py-3 text-navy outline-none focus:ring-2 focus:ring-sky";
 const buttonClass =
-  "rounded-xl bg-royal px-5 py-3 font-medium text-mist transition hover:bg-royal/90 disabled:opacity-60";
+  "w-full rounded-xl bg-royal px-4 py-4 text-lg font-medium text-mist transition duration-150 hover:bg-royal/90 active:scale-[0.98] disabled:opacity-60 lg:rounded-lg lg:py-2.5 lg:text-sm";
 
 function Message({ msg }) {
   if (!msg.text) return null;
+  const isError = msg.type === "error";
   return (
-    <p className={`text-sm ${msg.type === "error" ? "text-red-600" : "text-royal"}`}>
+    <p
+      role={isError ? "alert" : "status"}
+      className={`rounded-lg border px-3 py-2 text-base lg:text-sm ${
+        isError
+          ? "border-danger/30 bg-danger/5 text-danger"
+          : "border-royal/30 bg-royal/5 text-royal"
+      }`}
+    >
       {msg.text}
     </p>
   );
@@ -23,19 +31,24 @@ export default function Profile() {
   const [profileMsg, setProfileMsg] = useState({});
   const [savingProfile, setSavingProfile] = useState(false);
 
-  const [pw, setPw] = useState({ current: "", next: "", confirm: "" });
+  const [pw, setPw] = useState({ currentPassword: "", newPassword: "", confirmPassword: "" });
   const [pwMsg, setPwMsg] = useState({});
   const [savingPw, setSavingPw] = useState(false);
 
+  const handlePwChange = (e) => setPw({ ...pw, [e.target.name]: e.target.value });
+
   const handleProfile = async (e) => {
     e.preventDefault();
-    setSavingProfile(true);
     setProfileMsg({});
+    setSavingProfile(true);
     try {
       await updateProfile(name);
       setProfileMsg({ type: "success", text: "Name updated" });
     } catch (err) {
-      setProfileMsg({ type: "error", text: err.response?.data?.message || "Something went wrong" });
+      setProfileMsg({
+        type: "error",
+        text: err.response?.data?.message || "Could not reach the server.",
+      });
     } finally {
       setSavingProfile(false);
     }
@@ -44,56 +57,92 @@ export default function Profile() {
   const handlePassword = async (e) => {
     e.preventDefault();
     setPwMsg({});
-    if (pw.next !== pw.confirm) {
+    if (pw.newPassword !== pw.confirmPassword) {
       return setPwMsg({ type: "error", text: "New passwords do not match" });
     }
     setSavingPw(true);
     try {
-      await changePassword(pw.current, pw.next);
-      setPw({ current: "", next: "", confirm: "" });
+      await changePassword(pw.currentPassword, pw.newPassword);
+      setPw({ currentPassword: "", newPassword: "", confirmPassword: "" });
       setPwMsg({ type: "success", text: "Password updated" });
     } catch (err) {
-      setPwMsg({ type: "error", text: err.response?.data?.message || "Something went wrong" });
+      setPwMsg({
+        type: "error",
+        text: err.response?.data?.message || "Could not reach the server.",
+      });
     } finally {
       setSavingPw(false);
     }
   };
 
   return (
-    <div className="mx-auto max-w-xl space-y-6 px-4 py-8">
-      <Link to="/" className="text-sm text-royal hover:underline">
-        ← Back to dashboard
-      </Link>
+    <div className="min-h-screen bg-mist text-navy">
+      <Navbar />
+      <main className="mx-auto max-w-xl space-y-6 px-4 py-8">
+        <Link to="/" className="inline-block text-base font-medium text-royal hover:underline lg:text-sm">
+          ← Back to dashboard
+        </Link>
 
-      <form onSubmit={handleProfile} className="space-y-4 rounded-2xl border border-frost bg-white p-6">
-        <h2 className="font-display text-xl font-semibold text-navy">Profile</h2>
-        <div>
-          <label className="mb-1 block text-sm text-navy/70">Email</label>
-          <input value={user?.email || ""} disabled className={`${inputClass} opacity-60`} />
-        </div>
-        <div>
-          <label className="mb-1 block text-sm text-navy/70">Name</label>
-          <input value={name} onChange={(e) => setName(e.target.value)} className={inputClass} />
-        </div>
-        <Message msg={profileMsg} />
-        <button disabled={savingProfile} className={buttonClass}>
-          {savingProfile ? "Saving..." : "Save name"}
-        </button>
-      </form>
+        <form
+          onSubmit={handleProfile}
+          className="space-y-5 rounded-2xl border border-frost bg-white p-6 lg:space-y-4"
+        >
+          <h2 className="font-display text-xl font-semibold">Profile</h2>
+          <Field label="Email" id="email" type="email" value={user?.email || ""} disabled readOnly />
+          <Field
+            label="Name"
+            id="name"
+            placeholder="Your name"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            required
+          />
+          <Message msg={profileMsg} />
+          <button disabled={savingProfile} className={buttonClass}>
+            {savingProfile ? "Saving..." : "Save name"}
+          </button>
+        </form>
 
-      <form onSubmit={handlePassword} className="space-y-4 rounded-2xl border border-frost bg-white p-6">
-        <h2 className="font-display text-xl font-semibold text-navy">Change password</h2>
-        <input type="password" placeholder="Current password" value={pw.current}
-          onChange={(e) => setPw({ ...pw, current: e.target.value })} className={inputClass} />
-        <input type="password" placeholder="New password" value={pw.next}
-          onChange={(e) => setPw({ ...pw, next: e.target.value })} className={inputClass} />
-        <input type="password" placeholder="Confirm new password" value={pw.confirm}
-          onChange={(e) => setPw({ ...pw, confirm: e.target.value })} className={inputClass} />
-        <Message msg={pwMsg} />
-        <button disabled={savingPw} className={buttonClass}>
-          {savingPw ? "Updating..." : "Update password"}
-        </button>
-      </form>
+        <form
+          onSubmit={handlePassword}
+          className="space-y-5 rounded-2xl border border-frost bg-white p-6 lg:space-y-4"
+        >
+          <h2 className="font-display text-xl font-semibold">Change password</h2>
+          <Field
+            label="Current password"
+            id="currentPassword"
+            type="password"
+            placeholder="Your current password"
+            value={pw.currentPassword}
+            onChange={handlePwChange}
+            required
+          />
+          <Field
+            label="New password"
+            id="newPassword"
+            type="password"
+            placeholder="At least 6 characters"
+            minLength={6}
+            value={pw.newPassword}
+            onChange={handlePwChange}
+            required
+          />
+          <Field
+            label="Confirm new password"
+            id="confirmPassword"
+            type="password"
+            placeholder="Repeat the new password"
+            minLength={6}
+            value={pw.confirmPassword}
+            onChange={handlePwChange}
+            required
+          />
+          <Message msg={pwMsg} />
+          <button disabled={savingPw} className={buttonClass}>
+            {savingPw ? "Updating..." : "Update password"}
+          </button>
+        </form>
+      </main>
     </div>
   );
 }

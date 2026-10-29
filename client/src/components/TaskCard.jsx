@@ -105,7 +105,7 @@ export default function TaskCard({ task, removing, onStatusChange, onEdit, onDel
                 : "border-frost text-navy hover:border-danger hover:bg-danger/10 hover:text-danger sm:border-transparent sm:text-navy/70"
             }`}
           >
-            {confirming ? "Sure?" : "Delete"}
+            {confirming ? "Yes" : "Delete"}
           </button>
         </div>
       </div>
