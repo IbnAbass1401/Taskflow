@@ -176,7 +176,7 @@ export default function Dashboard() {
           <>
             <Skeleton />
             <p className="mt-4 text-sm text-navy/60">
-              Loading your tasks. The first load can take a moment while the server wakes up.
+              Loading your tasks.
             </p>
           </>
         ) : (
