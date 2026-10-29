@@ -291,8 +291,8 @@ TaskFlow uses a custom **Sky Blue** theme, defined once as Tailwind theme tokens
 
 **YOUR NAME**
 
-- GitHub: [@YOUR_USERNAME](https://github.com/YOUR_USERNAME)
-- LinkedIn: [your-profile](https://linkedin.com/in/your-profile)
+- GitHub: [@YOUR_USERNAME](https://github.com/IbnAbass1401)
+- LinkedIn: [your-profile](www.linkedin.com/in/abass1401)
 
 ## License
 
