@@ -43,40 +43,45 @@ export default function TaskCard({ task, removing, onStatusChange, onEdit, onDel
 
   return (
     <article
-      className={`animate-pop rounded-2xl border border-frost bg-white p-4 transition duration-200 hover:-translate-y-0.5 hover:border-sky hover:shadow-lift ${
+      className={`animate-pop rounded-2xl border border-frost bg-white p-5 transition duration-200 hover:-translate-y-0.5 hover:border-sky hover:shadow-lift sm:p-4 ${
         removing ? "pointer-events-none scale-95 opacity-0" : ""
       }`}
     >
-      <div className="flex items-start justify-between gap-3">
-        <h3
-          className={`font-display text-lg font-semibold leading-snug ${
-            done ? "text-navy/50 line-through" : ""
-          }`}
-        >
-          {task.title}
-        </h3>
-        <span
-          className={`shrink-0 rounded-full px-2.5 py-1 text-xs font-medium capitalize ${PRIORITY_STYLE[task.priority]}`}
-        >
-          {task.priority}
-        </span>
-      </div>
+      <span
+        className={`inline-block rounded-full px-3 py-1 text-sm font-medium capitalize sm:float-right sm:ml-3 sm:px-2.5 sm:text-xs ${PRIORITY_STYLE[task.priority]}`}
+      >
+        {task.priority}
+      </span>
+
+      <h3
+        className={`mt-3 font-display text-xl font-semibold leading-snug sm:mt-0 sm:text-lg ${
+          done ? "text-navy/50 line-through" : ""
+        }`}
+      >
+        {task.title}
+      </h3>
 
       {task.description && (
-        <p className="mt-1.5 line-clamp-2 text-sm text-navy/70">{task.description}</p>
+        <p className="mt-2 line-clamp-3 text-base text-navy/70 sm:mt-1.5 sm:line-clamp-2 sm:text-sm">
+          {task.description}
+        </p>
       )}
 
       {task.dueDate && (
-        <p className={`mt-3 text-sm ${overdue ? "font-medium text-danger" : "text-navy/60"}`}>
+        <p
+          className={`mt-3 text-base sm:text-sm ${
+            overdue ? "font-medium text-danger" : "text-navy/60"
+          }`}
+        >
           {overdue ? "Overdue: " : "Due "}
           {formatDue(task.dueDate)}
         </p>
       )}
 
-      <div className="mt-4 flex items-center justify-between gap-2 border-t border-frost pt-3">
+      <div className="mt-5 flex flex-col gap-3 border-t border-frost pt-4 sm:mt-4 sm:flex-row sm:items-center sm:justify-between sm:gap-2 sm:pt-3">
         <button
           onClick={() => onStatusChange(task, next.to)}
-          className={`rounded-lg px-3.5 py-2 text-sm font-medium transition duration-150 active:scale-95 ${
+          className={`w-full rounded-xl px-4 py-3.5 text-base font-medium transition duration-150 active:scale-95 sm:w-auto sm:rounded-lg sm:px-3.5 sm:py-2 sm:text-sm ${
             done
               ? "border border-frost bg-white text-navy hover:border-sky"
               : "bg-royal text-mist hover:bg-royal/90"
@@ -85,19 +90,19 @@ export default function TaskCard({ task, removing, onStatusChange, onEdit, onDel
           {next.label}
         </button>
 
-        <div className="flex items-center gap-1">
+        <div className="grid grid-cols-2 gap-3 sm:flex sm:items-center sm:gap-1">
           <button
             onClick={() => onEdit(task)}
-            className="rounded-lg px-3 py-2 text-sm font-medium text-navy/70 transition duration-150 hover:bg-frost hover:text-navy"
+            className="rounded-xl border border-frost py-3 text-base font-medium text-navy transition duration-150 hover:border-sky hover:bg-frost/50 sm:rounded-lg sm:border-transparent sm:px-3 sm:py-2 sm:text-sm sm:text-navy/70"
           >
             Edit
           </button>
           <button
             onClick={handleDelete}
-            className={`rounded-lg px-3 py-2 text-sm font-medium transition duration-150 ${
+            className={`rounded-xl border py-3 text-base font-medium transition duration-150 sm:rounded-lg sm:px-3 sm:py-2 sm:text-sm ${
               confirming
-                ? "bg-danger text-white"
-                : "text-navy/70 hover:bg-danger/10 hover:text-danger"
+                ? "border-danger bg-danger text-white"
+                : "border-frost text-navy hover:border-danger hover:bg-danger/10 hover:text-danger sm:border-transparent sm:text-navy/70"
             }`}
           >
             {confirming ? "Sure?" : "Delete"}
